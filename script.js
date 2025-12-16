@@ -161,7 +161,6 @@ window.editStudent = function(index) {
 }
 
 window.deleteStudent = function(index) {
-    // Custom futuristic confirm dialog could be added here, using native for now
     if(confirm("WARNING: Confirm Deletion of Data Fragment? This action is irreversible.")) {
         let students = getStudents();
         students.splice(index, 1);
