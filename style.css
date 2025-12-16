@@ -1,33 +1,93 @@
-/* Global Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* Phase 7: Form and Table Styling */
 
-/* Body Styling */
-body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* Header Styling */
-header {
-    text-align: center;
-    margin-bottom: 30px;
-    background-color: #4a90e2;
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
+/* Section Containers (Form and Table areas) */
+.form-section, .table-section {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    flex: 1 1 400px; /* Flex-grow, flex-shrink, basis */
+    max-width: 600px;
 }
 
-/* Container Layout */
-.container {
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #4a90e2;
+    padding-bottom: 10px;
+}
+
+/* Form Elements */
+form {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+input[type="text"], 
+input[type="number"], 
+input[type="email"], 
+select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+/* Button Styling */
+button {
+    background-color: #28a745; /* Green for "Go/Add" action */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Removes gaps between borders */
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Zebra Striping for readability */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
 }
