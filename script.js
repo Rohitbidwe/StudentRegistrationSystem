@@ -28,41 +28,53 @@ form.addEventListener('submit', function(e) {
 
     // A. Empty Fields
     if (!name || !studentId || !email || !contact || !course) {
-        showToast("Fill all data fields required.", "error");
+        showToast("FILL ALL DATA FIELDS REQUIRED.", "error");
         return;
     }
 
-    // B. Full Name (3 Words)
-    const nameParts = name.split(/\s+/); // Split by spaces
+    // B. Name Validation (Alphabets & 3 Words)
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(name)) {
+        showToast("NAME MUST CONTAIN ALPHABETS ONLY.", "error");
+        return;
+    }
+    const nameParts = name.split(/\s+/).filter(part => part.length > 0);
     if (nameParts.length < 3) {
-        showToast("Enter First, Middle, and Last name.", "error");
+        showToast("ENTER FIRST, MIDDLE, AND LAST NAME.", "error");
         return;
     }
 
-    // C. Data Types
-    if (isNaN(studentId)) { showToast("ID must be numeric.", "error"); return; }
-    if (isNaN(contact)) { showToast("Contact must be numeric.", "error"); return; }
+    // C. ID & Contact Validation (Numbers Only)
+    const numberRegex = /^\d+$/;
+    if (!numberRegex.test(studentId)) { showToast("ID MUST BE NUMERIC ONLY.", "error"); return; }
+    if (!numberRegex.test(contact)) { showToast("CONTACT MUST BE NUMERIC ONLY.", "error"); return; }
     
     // D. Contact Length (Exactly 10)
     if (contact.length !== 10) {
-        showToast("Contact must be exactly 10 digits.", "error");
+        showToast("CONTACT MUST BE EXACTLY 10 DIGITS.", "error");
         return;
     }
 
-    // E. Uniqueness Check (ID, Email, Contact)
-    // We filter out the current student if we are in Edit Mode to allow saving without changing unique fields
+    // E. Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showToast("ENTER A VALID EMAIL ADDRESS.", "error");
+        return;
+    }
+
+    // F. Uniqueness Check (ID, Email, Contact)
     const duplicateCheck = students.filter((_, index) => index !== editIndex);
     
     if (duplicateCheck.some(s => s.studentId === studentId)) {
-        showToast(`Student ID ${studentId} already exists!`, "error");
+        showToast(`ID ${studentId} ALREADY EXISTS!`, "error");
         return;
     }
-    if (duplicateCheck.some(s => s.email === email)) {
-        showToast(`Email ${email} is already registered!`, "error");
+    if (duplicateCheck.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+        showToast(`EMAIL ${email} ALREADY REGISTERED!`, "error");
         return;
     }
     if (duplicateCheck.some(s => s.contact === contact)) {
-        showToast(`Contact ${contact} is already registered!`, "error");
+        showToast(`CONTACT ${contact} ALREADY REGISTERED!`, "error");
         return;
     }
     
@@ -72,13 +84,11 @@ form.addEventListener('submit', function(e) {
 
     // 3. Save Data
     if (editIndex === -1) {
-        // Add
         students.push(studentData);
-        showToast("New Data Fragment Added.", "success");
+        showToast("NEW DATA FRAGMENT INITIALIZED.", "success");
     } else {
-        // Update
         students[editIndex] = studentData;
-        showToast("Data Fragment Updated.", "success");
+        showToast("DATA FRAGMENT UPDATED SUCCESSFULLY.", "success");
         resetFormState();
     }
 
@@ -100,26 +110,26 @@ function loadStudents() {
         emptyMsg.classList.add('hidden');
         students.forEach((student, index) => {
             const row = document.createElement('tr');
-            row.className = "table-row-anim group border-b border-gray-800 last:border-0";
+            row.className = "table-row-anim group";
             row.innerHTML = `
-                <td class="p-4 rounded-l-lg">
-                    <div class="font-bold text-white">${student.name}</div>
-                    <div class="text-xs text-gray-500">${student.email}</div>
+                <td class="p-4 rounded-l-xl">
+                    <div class="font-bold text-white tracking-wider font-['Orbitron']">${student.name}</div>
+                    <div class="text-xs text-cyan-300/70 tracking-wider">${student.email}</div>
                 </td>
                 <td class="p-4">
-                    <div class="font-mono text-blue-400 text-sm">ID: ${student.studentId}</div>
-                    <div class="font-mono text-gray-500 text-xs">Ph: ${student.contact}</div>
+                    <div class="font-mono text-cyan-400 text-sm tracking-widest">ID: ${student.studentId}</div>
+                    <div class="font-mono text-cyan-300/70 text-xs tracking-widest">Ph: ${student.contact}</div>
                 </td>
                 <td class="p-4">
-                    <span class="bg-gray-800 border border-gray-700 text-gray-300 text-xs px-2 py-1 rounded shadow-inner">
+                    <span class="bg-gray-900/80 border border-cyan-500/30 text-cyan-300 text-xs px-3 py-1.5 rounded-lg shadow-sm shadow-cyan-500/10 tracking-wider font-bold">
                         ${student.course}
                     </span>
                 </td>
-                <td class="p-4 rounded-r-lg text-center">
-                    <button onclick="editStudent(${index})" class="text-gray-400 hover:text-yellow-400 transition mx-1 p-2 hover:bg-yellow-400/10 rounded-full">
+                <td class="p-4 rounded-r-xl text-center">
+                    <button onclick="editStudent(${index})" class="text-cyan-400 hover:text-yellow-400 transition mx-1 p-3 hover:bg-yellow-400/10 rounded-xl" title="Edit Fragment">
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button onclick="deleteStudent(${index})" class="text-gray-400 hover:text-red-500 transition mx-1 p-2 hover:bg-red-500/10 rounded-full">
+                    <button onclick="deleteStudent(${index})" class="text-cyan-400 hover:text-red-500 transition mx-1 p-3 hover:bg-red-500/10 rounded-xl" title="Delete Fragment">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -144,18 +154,21 @@ window.editStudent = function(index) {
     // UI Change
     const btnSpan = submitBtn.querySelector('span');
     btnSpan.innerHTML = '<i class="fas fa-sync-alt animate-spin-slow"></i> UPDATE DATA';
-    submitBtn.querySelector('div').classList.add('from-yellow-600', 'to-orange-600');
+    submitBtn.querySelector('div').classList.replace('from-cyan-600', 'from-yellow-600');
+    submitBtn.querySelector('div').classList.replace('to-blue-600', 'to-orange-600');
+    submitBtn.classList.add('shadow-yellow-500/20', 'hover:shadow-yellow-500/40');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 window.deleteStudent = function(index) {
-    if(confirm("Confirm Deletion of Data Fragment?")) {
+    // Custom futuristic confirm dialog could be added here, using native for now
+    if(confirm("WARNING: Confirm Deletion of Data Fragment? This action is irreversible.")) {
         let students = getStudents();
         students.splice(index, 1);
         localStorage.setItem('students', JSON.stringify(students));
         loadStudents();
         if (editIndexInput.value == index) resetFormState();
-        showToast("Fragment Deleted.", "error");
+        showToast("FRAGMENT DELETED.", "error");
     }
 }
 
@@ -164,7 +177,9 @@ function resetFormState() {
     editIndexInput.value = "-1";
     const btnSpan = submitBtn.querySelector('span');
     btnSpan.innerHTML = '<i class="fas fa-plus"></i> INITIALIZE';
-    submitBtn.querySelector('div').classList.remove('from-yellow-600', 'to-orange-600');
+    submitBtn.querySelector('div').classList.replace('from-yellow-600', 'from-cyan-600');
+    submitBtn.querySelector('div').classList.replace('to-orange-600', 'to-blue-600');
+    submitBtn.classList.remove('shadow-yellow-500/20', 'hover:shadow-yellow-500/40');
 }
 
 function getStudents() {
@@ -176,22 +191,24 @@ function showToast(message, type) {
     const container = document.getElementById('notification-area');
     const toast = document.createElement('div');
     
-    // Colors based on type
     const colors = type === 'error' 
-        ? 'border-red-500/50 bg-red-900/80 text-red-100 shadow-[0_0_15px_rgba(239,68,68,0.4)]' 
-        : 'border-green-500/50 bg-green-900/80 text-green-100 shadow-[0_0_15px_rgba(34,197,94,0.4)]';
+        ? 'border-red-500/50 bg-red-950/90 text-red-100 shadow-[0_0_20px_rgba(239,68,68,0.4)]' 
+        : 'border-cyan-500/50 bg-cyan-950/90 text-cyan-100 shadow-[0_0_20px_rgba(6,182,212,0.4)]';
 
-    const icon = type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle';
+    const icon = type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-check';
 
-    toast.className = `flex items-center gap-3 px-4 py-3 rounded border backdrop-blur-md animate-slide-left ${colors}`;
-    toast.innerHTML = `<i class="fas ${icon}"></i> <span class="text-sm font-['Orbitron']">${message}</span>`;
+    toast.className = `flex items-center gap-4 px-5 py-4 rounded-xl border backdrop-blur-xl animate-slide-left ${colors} max-w-md`;
+    toast.innerHTML = `
+        <i class="fas ${icon} text-xl"></i> 
+        <span class="text-sm font-['Orbitron'] tracking-wider font-bold">${message}</span>
+    `;
 
     container.appendChild(toast);
 
-    // Remove after 3 seconds
     setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateX(20px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.5s ease-in';
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
 }
