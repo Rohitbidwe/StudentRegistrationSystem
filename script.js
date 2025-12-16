@@ -1,46 +1,66 @@
 const form = document.getElementById('studentForm');
 const tableBody = document.querySelector('tbody');
 
+// 1. Load data from Local Storage when page opens
+document.addEventListener('DOMContentLoaded', function() {
+    const storedStudents = JSON.parse(localStorage.getItem('students')) || [];
+    storedStudents.forEach(student => addRow(student));
+});
+
 form.addEventListener('submit', function(event) {
     event.preventDefault();
 
-    // 1. Get values
     const name = document.getElementById('name').value.trim();
     const studentId = document.getElementById('studentId').value.trim();
     const email = document.getElementById('email').value.trim();
     const course = document.getElementById('course').value;
 
-    // 2. VALIDATION LOGIC
-    // Check for empty fields
+    // Validation
     if (name === "" || studentId === "" || email === "" || course === "") {
         alert("Error: All fields are required!");
-        return; // Stop the function here
+        return;
     }
-
-    // Check if Student ID is actually a number
     if (isNaN(studentId)) {
         alert("Error: Student ID must be a numeric value.");
-        return; // Stop the function here
+        return;
     }
-
-    // Check if Email contains '@' and '.' (Basic check)
     if (!email.includes('@') || !email.includes('.')) {
         alert("Error: Please enter a valid email address.");
-        return; // Stop the function here
+        return;
     }
 
-    // 3. If validation passes, create the row
-    const newRow = document.createElement('tr');
+    // Create Student Object
+    const student = { name, studentId, email, course };
 
-    newRow.innerHTML = `
-        <td>${name}</td>
-        <td>${studentId}</td>
-        <td>${email}</td>
-        <td>${course}</td>
-    `;
+    // 2. Add to Table (UI)
+    addRow(student);
 
-    tableBody.appendChild(newRow);
+    // 3. Save to Local Storage (Database)
+    saveToStorage(student);
 
-    // 4. Clear form
     form.reset();
 });
+
+// Helper Function: Add row to HTML Table
+function addRow(student) {
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>${student.name}</td>
+        <td>${student.studentId}</td>
+        <td>${student.email}</td>
+        <td>${student.course}</td>
+    `;
+    tableBody.appendChild(newRow);
+}
+
+// Helper Function: Save to Browser Storage
+function saveToStorage(student) {
+    // Get existing data or empty array
+    const students = JSON.parse(localStorage.getItem('students')) || [];
+    
+    // Add new student
+    students.push(student);
+    
+    // Save back to storage
+    localStorage.setItem('students', JSON.stringify(students));
+}
