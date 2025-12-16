@@ -13,5 +13,34 @@
         <p>A simple platform to manage student records efficiently.</p>
     </header>
 
+    <div class="container">
+        <section class="form-section">
+            <h2>Register Student</h2>
+            <form id="studentForm">
+                <input type="hidden" id="editIndex"> <div class="form-group">
+                    <label for="studentName">Student Name:</label>
+                    <input type="text" id="studentName" placeholder="Enter name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentID">Student ID:</label>
+                    <input type="number" id="studentID" placeholder="Enter ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailID">Email ID:</label>
+                    <input type="email" id="emailID" placeholder="Enter email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactNo">Contact No:</label>
+                    <input type="number" id="contactNo" placeholder="Enter contact number" required>
+                </div>
+
+                <button type="submit" id="submitBtn">Add Student</button>
+            </form>
+        </section>
+    </div>
+
 </body>
 </html>
