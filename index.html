@@ -3,93 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
+    <title>Nexus Student Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex flex-col items-center p-4">
+<body class="font-['Poppins'] text-gray-100 min-h-screen flex flex-col items-center p-4 relative overflow-x-hidden">
 
-    <header class="w-full max-w-5xl mb-8 animate-fade-in-down">
-        <div class="bg-blue-600 text-white p-6 rounded-lg shadow-lg text-center">
-            <h1 class="text-3xl font-bold"><i class="fas fa-user-graduate mr-2"></i>Student Management System</h1>
-            <p class="text-blue-100 mt-2">Manage your records efficiently</p>
+    <div class="fixed inset-0 -z-10 bg-gray-900">
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-purple-900 to-black opacity-80"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full blur-[120px] opacity-20 animate-pulse-slow"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600 rounded-full blur-[120px] opacity-20 animate-pulse-slow delay-1000"></div>
+    </div>
+
+    <div id="notification-area" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
+
+    <header class="w-full max-w-6xl mb-8 mt-4 animate-slide-down">
+        <div class="glass-panel p-6 rounded-2xl flex items-center justify-between border-b border-white/10">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                    <i class="fas fa-atom text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-['Orbitron'] text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">NEXUS PORTAL</h1>
+                    <p class="text-xs text-gray-400 tracking-[0.2em] uppercase">Student Data Management System</p>
+                </div>
+            </div>
+            <div id="totalCount" class="hidden md:block font-['Orbitron'] bg-white/5 border border-white/10 px-4 py-2 rounded-lg text-blue-300">
+                Total Students: <span id="countValue" class="text-white font-bold">0</span>
+            </div>
         </div>
     </header>
 
-    <main class="w-full max-w-5xl flex flex-col md:flex-row gap-6">
+    <main class="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
         
-        <section class="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-md h-fit animate-slide-in-left">
-            <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2">
-                <i class="fas fa-edit mr-2"></i>Student Details
-            </h2>
-            
-            <form id="studentForm" class="flex flex-col gap-4">
-                <input type="hidden" id="editIndex" value="-1">
+        <section class="w-full lg:w-1/3 animate-slide-right">
+            <div class="glass-panel p-8 rounded-2xl border border-white/10 shadow-2xl relative overflow-hidden group">
+                <div class="absolute inset-0 border border-blue-500/30 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-600 mb-1">Student Name</label>
-                    <input type="text" id="name" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="John Doe">
-                </div>
+                <h2 class="font-['Orbitron'] text-xl mb-6 flex items-center gap-2 text-blue-300">
+                    <i class="fas fa-user-plus"></i> New Entry
+                </h2>
+                
+                <form id="studentForm" class="flex flex-col gap-5">
+                    <input type="hidden" id="editIndex" value="-1">
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-600 mb-1">Student ID</label>
-                    <input type="number" id="studentId" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="101">
-                </div>
+                    <div class="input-group">
+                        <label class="text-xs uppercase tracking-wider text-gray-400 mb-1 ml-1 block">Full Name (3 Words)</label>
+                        <input type="text" id="name" class="cyber-input" placeholder="First Middle Last">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-600 mb-1">Email Address</label>
-                    <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="john@example.com">
-                </div>
+                    <div class="input-group">
+                        <label class="text-xs uppercase tracking-wider text-gray-400 mb-1 ml-1 block">Student ID</label>
+                        <input type="number" id="studentId" class="cyber-input" placeholder="e.g. 2025001">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-600 mb-1">Contact No.</label>
-                    <input type="number" id="contact" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="9876543210">
-                    <p class="text-xs text-gray-400 mt-1">Must be exactly 10 digits</p>
-                </div>
+                    <div class="input-group">
+                        <label class="text-xs uppercase tracking-wider text-gray-400 mb-1 ml-1 block">Email ID</label>
+                        <input type="email" id="email" class="cyber-input" placeholder="student@nexus.com">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-600 mb-1">Course</label>
-                    <select id="course" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-white">
-                        <option value="">Select Course</option>
-                        <option value="Computer Science">Computer Science</option>
-                        <option value="Mechanical Eng">Mechanical Eng</option>
-                        <option value="Business">Business</option>
-                        <option value="Arts">Arts</option>
-                    </select>
-                </div>
+                    <div class="input-group">
+                        <label class="text-xs uppercase tracking-wider text-gray-400 mb-1 ml-1 block">Contact (10 Digits)</label>
+                        <input type="number" id="contact" class="cyber-input" placeholder="9876543210">
+                    </div>
 
-                <button type="submit" id="submitBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300 transform hover:scale-105 flex justify-center items-center gap-2 mt-2">
-                    <i class="fas fa-plus-circle"></i> <span>Add Student</span>
-                </button>
-            </form>
+                    <div class="input-group">
+                        <label class="text-xs uppercase tracking-wider text-gray-400 mb-1 ml-1 block">Discipline</label>
+                        <select id="course" class="cyber-input appearance-none cursor-pointer">
+                            <option value="" class="bg-gray-800">Select Stream</option>
+                            <option value="Computer Sci" class="bg-gray-800">Computer Science</option>
+                            <option value="Mech Eng" class="bg-gray-800">Mechanical Eng</option>
+                            <option value="AI & Data" class="bg-gray-800">AI & Data Science</option>
+                            <option value="Cybersec" class="bg-gray-800">Cybersecurity</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="mt-4 cyber-button relative w-full py-3 rounded-lg font-['Orbitron'] font-bold tracking-wider overflow-hidden group">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            <i class="fas fa-plus"></i> INITIALIZE
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-80 group-hover:opacity-100 transition duration-300"></div>
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition duration-300 blur-md"></div>
+                    </button>
+                </form>
+            </div>
         </section>
 
-        <section class="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md animate-slide-in-right flex flex-col">
-            <h2 class="text-xl font-bold mb-4 text-gray-700 border-b pb-2 flex justify-between items-center">
-                <span><i class="fas fa-table mr-2"></i>Student List</span>
-                <span id="totalCount" class="text-sm bg-blue-100 text-blue-800 py-1 px-3 rounded-full">Total: 0</span>
-            </h2>
+        <section class="w-full lg:w-2/3 animate-slide-left">
+            <div class="glass-panel p-1 rounded-2xl border border-white/10 shadow-2xl h-full flex flex-col">
+                <div class="p-6 pb-2 border-b border-white/10 flex justify-between items-center">
+                    <h2 class="font-['Orbitron'] text-xl text-purple-300">
+                        <i class="fas fa-database mr-2"></i> Database
+                    </h2>
+                    <div class="flex gap-2">
+                         <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                         <div class="w-3 h-3 rounded-full bg-yellow-500 animate-pulse delay-75"></div>
+                         <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse delay-150"></div>
+                    </div>
+                </div>
 
-            <div class="overflow-x-auto overflow-y-auto max-h-[400px] custom-scrollbar rounded border border-gray-200">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-100 sticky top-0 z-10 shadow-sm">
-                        <tr>
-                            <th class="p-3 text-sm font-bold text-gray-600">Name</th>
-                            <th class="p-3 text-sm font-bold text-gray-600">ID</th>
-                            <th class="p-3 text-sm font-bold text-gray-600">Contact</th>
-                            <th class="p-3 text-sm font-bold text-gray-600">Course</th>
-                            <th class="p-3 text-sm font-bold text-gray-600 text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentTableBody" class="text-sm divide-y divide-gray-200">
-                        </tbody>
-                </table>
-            </div>
-            
-            <div id="emptyMsg" class="text-center text-gray-400 mt-10 hidden">
-                <i class="fas fa-inbox text-4xl mb-2"></i>
-                <p>No students found. Add one to get started!</p>
+                <div class="overflow-auto max-h-[600px] p-4 custom-scrollbar">
+                    <table class="w-full text-left border-separate border-spacing-y-3">
+                        <thead class="sticky top-0 z-10">
+                            <tr class="text-xs uppercase tracking-wider text-gray-400 bg-gray-900/90 backdrop-blur-md">
+                                <th class="p-4 rounded-l-lg">Profile</th>
+                                <th class="p-4">ID & Contact</th>
+                                <th class="p-4">Course</th>
+                                <th class="p-4 rounded-r-lg text-center">Controls</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            </tbody>
+                    </table>
+
+                    <div id="emptyMsg" class="hidden flex flex-col items-center justify-center py-20 text-gray-500 opacity-50">
+                        <i class="fas fa-microchip text-6xl mb-4"></i>
+                        <p class="font-['Orbitron']">NO DATA FRAGMENTS FOUND</p>
+                    </div>
+                </div>
             </div>
         </section>
 
