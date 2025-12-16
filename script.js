@@ -1,22 +1,37 @@
-// Select the form and the table body from the DOM
 const form = document.getElementById('studentForm');
-const tableBody = document.querySelector('tbody'); // Selects the first tbody found
+const tableBody = document.querySelector('tbody');
 
-// Add an event listener for the form submission
 form.addEventListener('submit', function(event) {
-    // 1. Prevent the default behavior (page reload)
     event.preventDefault();
 
-    // 2. Get values from the input fields
-    const name = document.getElementById('name').value;
-    const studentId = document.getElementById('studentId').value;
-    const email = document.getElementById('email').value;
+    // 1. Get values
+    const name = document.getElementById('name').value.trim();
+    const studentId = document.getElementById('studentId').value.trim();
+    const email = document.getElementById('email').value.trim();
     const course = document.getElementById('course').value;
 
-    // 3. Create a new table row element
+    // 2. VALIDATION LOGIC
+    // Check for empty fields
+    if (name === "" || studentId === "" || email === "" || course === "") {
+        alert("Error: All fields are required!");
+        return; // Stop the function here
+    }
+
+    // Check if Student ID is actually a number
+    if (isNaN(studentId)) {
+        alert("Error: Student ID must be a numeric value.");
+        return; // Stop the function here
+    }
+
+    // Check if Email contains '@' and '.' (Basic check)
+    if (!email.includes('@') || !email.includes('.')) {
+        alert("Error: Please enter a valid email address.");
+        return; // Stop the function here
+    }
+
+    // 3. If validation passes, create the row
     const newRow = document.createElement('tr');
 
-    // 4. Set the inner HTML of the row (creating the cells)
     newRow.innerHTML = `
         <td>${name}</td>
         <td>${studentId}</td>
@@ -24,9 +39,8 @@ form.addEventListener('submit', function(event) {
         <td>${course}</td>
     `;
 
-    // 5. Append the new row to the table body
     tableBody.appendChild(newRow);
 
-    // 6. Clear the form fields for the next entry
+    // 4. Clear form
     form.reset();
 });
