@@ -1,22 +1,24 @@
-/* Cyberpunk Panel Style */
+/* --- CYBERPUNK PANEL (GLASSMORPHISM) --- */
+/* Creates the translucent, glassy effect on panels */
 .cyber-panel {
-    background: rgba(17, 24, 39, 0.7); /* Gray-900 with opacity */
-    backdrop-filter: blur(20px);
+    background: rgba(17, 24, 39, 0.7); /* Dark semi-transparent background */
+    backdrop-filter: blur(20px);       /* Blurs whatever is behind the panel */
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(6, 182, 212, 0.2); /* Cyan-500 with low opacity */
+    border: 1px solid rgba(6, 182, 212, 0.2); /* Subtle Cyan border */
     box-shadow: 
         0 10px 30px -10px rgba(0, 0, 0, 0.5),
-        inset 0 0 20px rgba(6, 182, 212, 0.05);
+        inset 0 0 20px rgba(6, 182, 212, 0.05); /* Inner glow */
     position: relative;
 }
 
+/* Adds a gradient border effect */
 .cyber-panel::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(168, 85, 247, 0.4), rgba(6, 182, 212, 0.1)); /* Cyan to Purple gradient */
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(168, 85, 247, 0.4), rgba(6, 182, 212, 0.1));
     -webkit-mask: 
        linear-gradient(#fff 0 0) content-box, 
        linear-gradient(#fff 0 0);
@@ -25,13 +27,13 @@
     pointer-events: none;
 }
 
-/* Custom Inputs */
+/* --- INPUT FIELD STYLING --- */
 .cyber-input {
     width: 100%;
     background: rgba(17, 24, 39, 0.8);
     border: 1px solid rgba(6, 182, 212, 0.3);
-    color: #cffafe; /* Cyan-100 */
-    padding: 14px 14px 14px 44px; /* Added left padding for icon */
+    color: #cffafe; /* Cyan text color */
+    padding: 14px 14px 14px 44px; /* Left padding ensures text doesn't overlap the icon */
     border-radius: 12px;
     outline: none;
     transition: all 0.3s ease;
@@ -40,11 +42,12 @@
     letter-spacing: 0.05em;
 }
 
+/* Focus State: What happens when you click the input */
 .cyber-input:focus {
-    border-color: #06b6d4; /* Cyan-500 */
+    border-color: #06b6d4;
     box-shadow: 
         0 0 0 3px rgba(6, 182, 212, 0.2),
-        0 0 15px rgba(6, 182, 212, 0.2);
+        0 0 15px rgba(6, 182, 212, 0.2); /* Glowing effect */
     background: rgba(17, 24, 39, 1);
 }
 
@@ -53,7 +56,7 @@
     font-weight: 400;
 }
 
-/* Custom Scrollbar */
+/* --- CUSTOM SCROLLBAR (FUTURISTIC LOOK) --- */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
@@ -66,42 +69,45 @@
     border-radius: 3px;
     box-shadow: 0 0 5px rgba(6, 182, 212, 0.5);
 }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #0891b2, #2563eb);
-}
 
-/* Animations */
+/* --- ANIMATIONS (KEYFRAMES) --- */
+
+/* Moves the background circuit pattern slowly */
 @keyframes panSlow {
     from { background-position: 0% 0%; }
     to { background-position: 100% 100%; }
 }
 .animate-pan-slow { animation: panSlow 60s linear infinite; }
 
+/* Fades in content from top */
 @keyframes fadeInDown {
     from { transform: translateY(-30px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
 .animate-fade-in-down { animation: fadeInDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
+/* Slides content from left */
 @keyframes slideInLeft {
     from { transform: translateX(-30px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
 .animate-slide-in-left { animation: slideInLeft 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
 
+/* Slides content from right */
 @keyframes slideInRight {
     from { transform: translateX(30px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
 .animate-slide-in-right { animation: slideInRight 0.8s 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
 
+/* Pulsing glow effect */
 @keyframes pulseSlow {
     0%, 100% { opacity: 0.3; }
     50% { opacity: 0.6; }
 }
 .animate-pulse-slow { animation: pulseSlow 4s infinite ease-in-out; }
 
-/* Table Row Style */
+/* --- TABLE ROW STYLING --- */
 .table-row-anim {
     transition: all 0.3s ease;
     background: rgba(17, 24, 39, 0.6);
@@ -109,9 +115,11 @@
     backdrop-filter: blur(10px);
     border-radius: 12px;
 }
+/* Rounded corners for the first and last cells */
 .table-row-anim td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
 .table-row-anim td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
 
+/* Hover effect on table rows */
 .table-row-anim:hover {
     transform: translateX(5px) scale(1.01);
     background: rgba(17, 24, 39, 0.9);
@@ -121,7 +129,8 @@
         0 0 15px rgba(6, 182, 212, 0.2);
 }
 
-/* Ensure no spinners appear if types are mixed */
+/* --- FAILSAFE: Hide Number Spinners --- */
+/* Even though we use type="text", this ensures spinners never appear */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
